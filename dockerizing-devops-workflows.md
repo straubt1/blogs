@@ -149,7 +149,7 @@ Note: The query language used by the Azure CLI 2.0 is a standard called JMESPath
 
 Now lets get these script into the container. I could just copy this single script, but knowing I am going to want to build on these scripts in the future, let's assume that we will have an entire folder of scripts.
 
-```
+```Dockerfile
 COPY scripts/ scripts/
 ```
 
@@ -194,7 +194,7 @@ Success! We are done! Or are we?
 
 Remember I told you I was a DevOps Engineer and how good would I be if I left this in a state that required manually building and pushing up any time there was a change?
 
-Login to Dockerhub and view your dashboard where you should see your first image push.   
+Login to Dockerhub and view your dashboard where you should see your first image push.  
 Now lets add an integration to the github repo to allow for automatic builds.
 
 Note: Dockerhub will only provide this free service if you github repo and docker image are both publicly available. If you were private/on-prem, similar output could be found by using your build server to handle this for you.
@@ -213,7 +213,7 @@ These steps should look familiar to what you were seeing locally, but now it is 
 
 _might take this out_
 
-Remember earlier I mentioned that creating the BASH to load everything in the `scripts` directory could also have benefit.   
+Remember earlier I mentioned that creating the BASH to load everything in the `scripts` directory could also have benefit.  
 Consider you have functions that you don't want in a public repository.  
 You could map that local folder into the scripts folder and they will be loaded at runtime.
 
