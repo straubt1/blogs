@@ -38,7 +38,7 @@ We can ensure docker is running by firing up our favorite terminal and running a
 
 You should see something like this:
 
-```
+```bash
 $ docker version
 Client:
  Version:      17.06.2-ce
@@ -71,7 +71,7 @@ A Dockerfile represents how our docker image will be built and if you need to kn
 We need to setup an environment that can run the azure cli, lucky for us the azure cli team has done this already.  
 Rather than repeat what they have done in their image, we will just use that image as our base. This also has the added benefit that we can get any changes that the team developing the azure cli might make in the future.
 
-```
+```Dockerfile
 FROM azure-cli:latest
 
 CMD bash
@@ -79,7 +79,7 @@ CMD bash
 
 Let's go ahead and build this and test out what we have.
 
-```
+```bash
 $ docker build -t azhelper .
 Sending build context to Docker daemon  113.2kB
 Step 1/2 : FROM azuresdk/azure-cli-python:latest
@@ -94,7 +94,7 @@ Successfully tagged azhelper:latest
 
 This command will build the image locally, which I can then run a container from.
 
-```
+```bash
 Docker run -it azhelper
 Bash:
 ```
@@ -156,7 +156,7 @@ COPY scripts/ scripts/
 Now we need a way to load these scripts into the environment so that they are available when we run a container.  
 More BASH love here, let's insert some dynamic awesomeness into our `.bashrc` file so that this gets loaded every time.
 
-```
+```bash
 RUN echo -e "\
 for f in /scripts/*; \
 do chmod a+x \$f; source \$f; \
@@ -167,7 +167,7 @@ This may look a bit wild, but I assure you it is of the simplest intent. Any tim
 
 Let's fire up another build and start a new container.
 
-```
+```bash
 Docker build
 Docker run -it
 $bash: az account list
@@ -185,7 +185,7 @@ Things are looking good, push your changes up to github to save all the good wor
 
 So we have created this awesome little container to run the Azure CLI from anywhere, and even have room to grow some handy functions for common use. But all this docker building seems a lot like shipping a code and requiring the end user to build it \(I am looking at you linux…\), let's address this. Now I am going to use Dockerhub.io since this is a completely open source and public image \(we also get automatic builds\), but the same concepts could be applied to a private/on-prem setup.
 
-```
+```bash
 docker push straubt1/azhelper:latest
 ```
 
@@ -205,9 +205,7 @@ If I go to the "Build Details" pages I can manually trigger a build, then see th
 \(Show build details\)  
 These steps should look familiar to what you were seeing locally, but now it is all done in the cloud.
 
-> Using two cloud hosted services \(github.com and dockerhub.io\) to build a docker image that contains a CLI tool used for deploying cloud services
->
-> * Mind blown.
+> Using two cloud hosted services \(github.com and dockerhub.io\) to build a docker image that contains a CLI tool used for deploying/configuring cloud services
 
 ## Customizing
 
