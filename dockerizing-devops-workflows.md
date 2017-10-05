@@ -43,44 +43,22 @@ The folks at docker.com have made it very easy to install Docker so you shouldnâ
 We can ensure docker is running by firing up our favorite terminal and running a \`docker version\` command. 
 
 You should see something like this:
+```
+$ docker version
+Client:
+ Version:      17.06.2-ce
+ API version:  1.30
+ Go version:   go1.8.3
+ Git commit:   cec0b72
+ Built:        Tue Sep  5 20:00:17 2017
+ OS/Arch:      linux/amd64
 
-
-
-
-
-`$ docker version`
-
-`Client:`
-
-` Version:      17.06.2-ce`
-
-` API version:  1.30`
-
-` Go version:   go1.8.3`
-
-` Git commit:   cec0b72`
-
-` Built:        Tue Sep  5 20:00:17 2017`
-
-` OS/Arch:      linux/amd64`
-
-``
-
-`Server:`
-
-` Version:      17.06.2-ce`
-
-` API version:  1.30 (minimum version 1.12)`
-
-` Go version:   go1.8.3`
-
-` Git commit:   cec0b72`
-
-` Built:        Tue Sep  5 19:59:19 2017`
-
-` OS/Arch:      linux/amd64`
-
-` Experimental: true`
-
-
-
+Server:
+ Version:      17.06.2-ce
+ API version:  1.30 (minimum version 1.12)
+ Go version:   go1.8.3
+ Git commit:   cec0b72
+ Built:        Tue Sep  5 19:59:19 2017
+ OS/Arch:      linux/amd64
+ Experimental: true
+```
