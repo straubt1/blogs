@@ -1,8 +1,8 @@
-# Dockerizeing DevOps Workflows
+# Dockerize DevOps Workflows
 
 "It works on my machine" is often associated with application development when developers test something locally but breaks something in production.
 
-We have all been there, trying to run a command line utility and something isn't right, something has changed, and your peers respond with "I can run it from my machine", sound familiar?Each day I am using the Azure CLI, Terraform, and Ansible. The Azure CLI and Ansible both require Python, and it just so happens that they use different versions as well. Of course Python can run side by side with each other and for a long time things just worked. Until they didn’t… So how can Docker help?
+We have all been there, trying to run a command line utility and something isn't right, something has changed, and your peers respond with "I can run it from my machine", sound familiar? Each day I am using the Azure CLI, Terraform, and Ansible. The Azure CLI and Ansible both require Python, and it just so happens that they use different versions as well. Of course Python can run side by side with each other and for a long time things just worked. Until they didn’t… So how can Docker help?
 
 What if we build a docker image that can be used to setup an environment that is purpose built for the utility we are trying to run?
 
@@ -14,7 +14,7 @@ Break down the problems and try to solve them.
 
 Docker to the rescue.
 
-Let us go through an example that is "for the sake of argument/blog post" that also just so happens to be very real and something I use everyday.
+Let us go through an example that is "for the sake of argument/blog post" but also just so happens to be very real and something I use everyday.
 
 I am a member of a Cloud DevOps team that is responsible for creating, configuring and maintaining cloud infrastructure in Azure. A common and very powerful tool at my disposal is the Azure CLI 2.0. My goal is to create a docker image that my team and I can use to easily use this utility.
 
