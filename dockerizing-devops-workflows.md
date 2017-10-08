@@ -118,9 +118,7 @@ exit
 >
 ```
 
-Now that we are running a container where we can execute the azure cli from.  
-Go ahead and try to list your azure accounts (`az accounts list`).
-Oops, we need to login, try a `az login`. A web address will show up with a code that can be used to authenticate against Follow those steps and you should see a success:
+Now that we are running a container where we can execute commands from, try to list your azure accounts by calling `az accounts list`.
 
 ```
 bash-4.3# az account list
@@ -128,11 +126,35 @@ Please run "az login" to access your accounts.
 []
 ```
 
-Oops, we need to login, try a `az login`. A web address will show up with a code that can be used to authenticate against Follow those steps and you should see a success:
+Oops, we need to login, try a `az login`.
+```
+bash-4.3# az login
+To sign in, use a web browser to open the page https://aka.ms/devicelogin and enter the code ZZZZZZZZZ to authenticate.
+```
+Follow the instructions to authenticate against your azure credentials to get access.
+Try again to list your accounts:
+```
+bash-4.3# az account list
+[
+  {
+    "cloudName": "AzureCloud",
+    "id": "GUID",
+    "isDefault": true,
+    "name": "Subscription Name",
+    "state": "Enabled",
+    "tenantId": "GUID",
+    "user": {
+      "name": "EMAIL",
+      "type": "user"
+    }
+  }
+]
+```
 
 
-Question: Are we going to have to login every time?  
-Answer: Yes! If we leave it this way.
+
+**Question**: Are we going to have to login every time?  
+**Answer**: Yes! If we leave it this way.
 
 To fix this problem, lets exit out of our running container and map a volume where our login access tokens can be stored and persisted outside the container.
 
