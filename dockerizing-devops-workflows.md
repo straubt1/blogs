@@ -119,10 +119,17 @@ exit
 ```
 
 Now that we are running a container where we can execute the azure cli from.  
-Go ahead and try `az accounts list`  
+Go ahead and try to list your azure accounts (`az accounts list`).
 Oops, we need to login, try a `az login`. A web address will show up with a code that can be used to authenticate against Follow those steps and you should see a success:
 
-`az account list`
+```
+bash-4.3# az account list
+Please run "az login" to access your accounts.
+[]
+```
+
+Oops, we need to login, try a `az login`. A web address will show up with a code that can be used to authenticate against Follow those steps and you should see a success:
+
 
 Question: Are we going to have to login every time?  
 Answer: Yes! If we leave it this way.
