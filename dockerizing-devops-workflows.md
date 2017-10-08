@@ -291,10 +291,12 @@ Now lets add an integration to the github repo to allow for automatic builds.
 
 **Note:** Dockerhub will only provide this free service if you github repo and docker image are both publicly available. If you were private/on-prem, similar output could be found by using your build server to handle this for you.
 
+(insert process on how to add integration)
+
 Once the integration is done we can set up triggers to determine when to build a new image and what tags to apply. For this example I am going with the most basic, checkins on the master branch will result in a new build that is tagged `latest`.
 
 If I go to the "Build Details" pages I can manually trigger a build, then see the status as it builds.  
-\(Show build details\)  
+(Show build details)  
 These steps should look familiar to what you were seeing locally, but now it is all done in the cloud.
 
 > Using two cloud hosted services \(github.com and dockerhub.io\) to build a docker image that contains a CLI tool used for deploying/configuring cloud services
