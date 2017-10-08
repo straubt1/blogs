@@ -212,14 +212,13 @@ function search-vms () {
 
 **Note:** The query language used by the Azure CLI 2.0 is a standard called [JMESPath  ](http://jmespath.org/)which is a far cry from the where we were with the CLI 1.0 that had no built in querying. Instead you were forced to output in JSON and pipe to something like [jq](https://stedolan.github.io/jq/). Of course you could still use this approach for CLI 2.0, but I find the syntax much easier to follow for JMESPath, it is also a standardize spec.
 
-We need to get this script into the container. We could just copy this single script, but knowing I am going to want to build on these scripts in the future, let's assume that we will have an entire folder of scripts.
+We need to get this script into the container. We could just copy this single script, but knowing we are going to want to build on these scripts in the future, let's assume that we will have an entire folder of scripts.
 
 ```Dockerfile
 COPY scripts/ scripts/
 ```
 
-Now we need a way to load these scripts into the environment so that they are available when we run a container.  
-More BASH love here, let's insert some dynamic awesomeness into our `.bashrc` file so that this gets loaded every time.
+Next we need a way to load these scripts into the environment so that they are available when we run a container. Let's insert some dynamic Bash awesomeness into our `.bashrc` file so that this gets loaded at runtime.
 
 ```bash
 RUN echo -e "\
@@ -228,20 +227,44 @@ do chmod a+x \$f; source \$f; \
 done;" > ~/.bashrc
 ```
 
-This may look a bit wild, but I assure you it is of the simplest intent. Any time that BASH loads, anything in the `scripts` folder will get sourced and the functions made available. This will become even more beneficial as I will show later \(setting hooks to keep you reading!\).
+This may look a bit wild, but I assure you it is of the simplest intent. Any time that Bash loads, anything in the `scripts` folder will get sourced and the functions made available.
+
+Our full `Dockerfile`:
+```
+FROM azuresdk/azure-cli-python:latest
+
+COPY scripts/ scripts/
+RUN echo -e "\
+for f in /scripts/*; \
+do chmod a+x \$f; source \$f; \
+done;" > ~/.bashrc
+
+CMD bash
+```
 
 Let's fire up another build and start a new container.
 
 ```bash
-Docker build
-Docker run -it
-$bash: az account list
-LIST
-$bash: search-group testgroup
+> docker build -t azhelper .
 
-$bash: search-group test
+...
 
-Search-vms test
+> docker run -it -v ${HOME}/.azure:/root/.azure azhelper:latest
+
+bash-4.3# search-group testgroup
+ResourceGroup
+--------------------------
+mytestgroup-1
+mytestgroup-2
+bash-4.3#
+bash-4.3# search-group test
+ResourceGroup
+--------------------------
+mytest1
+mytest2
+mytestgroup-1
+mytestgroup-2
+bash-4.3#
 ```
 
 Things are looking good, push your changes up to github to save all the good work.
