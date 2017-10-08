@@ -120,7 +120,7 @@ exit
 
 Now that we are running a container where we can execute commands from, try to list your azure accounts by calling `az accounts list`.
 
-```
+```bash
 bash-4.3# az account list
 Please run "az login" to access your accounts.
 []
@@ -128,7 +128,7 @@ Please run "az login" to access your accounts.
 
 Oops, we need to login, try a `az login`.
 
-```
+```bash
 bash-4.3# az login
 To sign in, use a web browser to open the page https://aka.ms/devicelogin and enter the code ZZZZZZZZZ to authenticate.
 ```
@@ -136,7 +136,7 @@ To sign in, use a web browser to open the page https://aka.ms/devicelogin and en
 Follow the instructions to authenticate against your azure credentials to get access.  
 Try again to list your accounts:
 
-```
+```bash
 bash-4.3# az account list
 [
   {
@@ -163,13 +163,13 @@ bash-4.3# az account list
 To fix this problem, lets exit out of our running container and map a volume where our login access tokens can be stored and persisted outside the container.
 
 Make sure we have a local folder to store the Azure CLI files:
-```
+```bash
 mkdir ${HOME}/.azure
 ```
 
 Now run the container again but let's add the volume:
 
-```
+```bash
 docker run -it -v ${HOME}/.azure:/root/.azure azhelper:latest
 ```
 
@@ -230,7 +230,7 @@ done;" > ~/.bashrc
 This may look a bit wild, but I assure you it is of the simplest intent. Any time that Bash loads, anything in the `scripts` folder will get sourced and the functions made available.
 
 Our full `Dockerfile`:
-```
+```Dockerfile
 FROM azuresdk/azure-cli-python:latest
 
 COPY scripts/ scripts/
