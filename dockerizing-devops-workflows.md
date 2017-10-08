@@ -1,8 +1,8 @@
 # Dockerize DevOps Workflows
 
-"It works on my machine" is often associated with application development when a developer makes a change that works locally but ends up breaking something in production. We have all been there, trying to run a command line utility and something isn't right, something has changed, and your peer respond with "I can run it from my machine".  Sound familiar? 
+"It works on my machine" is often associated with application development when a developer makes a change that works locally but ends up breaking something in production. We have all been there, trying to run a command line utility and something isn't right, something has changed, and your peer respond with "I can run it from my machine".  Sound familiar?
 
-Each day I am using the Azure CLI, Terraform, and Ansible. The Azure CLI and Ansible both require Python, and it just so happens that they can use different versions as well. Of course Python versions can run side by side with each other and for a long time things just worked. Until they didn’t… So how can Docker help?
+Each day I am using the Azure CLI, Terraform, and Ansible. The Azure CLI and Ansible both require Python, and it just so happens that they can use different versions as well. Of course Python versions can run side by side with each other and for a long time things just worked. Until they didn’t… So how can Docker help?
 
 What if we build a docker image that can be used to setup an environment that is purpose built for the utility we are trying to run?
 
@@ -67,10 +67,13 @@ Once this is set up we are ready to start adding files. It is always a good idea
 
 ## Dockerfile
 
-A Dockerfile represents how our docker image will be built and if you need to know more about the specifics, take a look at the docs [https://docs.docker.com/engine/reference/builder/](https://docs.docker.com/engine/reference/builder/). Everything we will do here is going to be very simple so I wouldn't stress the specifics just yet.
+A Dockerfile represents how our docker image will be built. Now, there is a lot you can do in a `Dockerfile`, but everything we will do here is going to be very simple so don't stress the specifics.If you need to know more take a look at the docs [https://docs.docker.com/engine/reference/builder/](https://docs.docker.com/engine/reference/builder/).
 
-We need to setup an environment that can run the azure cli, lucky for us the azure cli team has done this already.  
-Rather than repeat what they have done in their image, we will just use that image as our base. This also has the added benefit that we can get any changes that the team developing the azure cli might make in the future.
+We need to setup an environment that can run the Azure CLI. Normally this would involve digging into the requirements, python in this case, and adding all the things that the Azure CLI requires. Lucky for us the Azure CLI team has done this already, so we will just layer on top of what they have already done. You can take a deeper look at what they are doing in this image by checking out their [Dockerfile](https://github.com/Azure/azure-cli/blob/master/Dockerfile "Dockerfile").
+
+Rather than repeat what they have done in their image, we will just use their image as our base. This also has the added benefit that we can get any changes that the team developing the azure cli might make in the future. This turns out to be a huge benefit since Azure is constantly adding new resources and the ability to interact with those resources in the Azure CLI quickly is a must.
+
+Here is the start of our `Dockerfile`:
 
 ```Dockerfile
 FROM azure-cli:latest
@@ -78,10 +81,10 @@ FROM azure-cli:latest
 CMD bash
 ```
 
-Let's go ahead and build this and test out what we have.
+Let's go ahead and build this and test out what we have. Here we will create our image with the name "azhelper" for easy reference.
 
 ```bash
-$ docker build -t azhelper .
+> docker build -t azhelper .
 Sending build context to Docker daemon  113.2kB
 Step 1/2 : FROM azuresdk/azure-cli-python:latest
  ---> b95f51b22e75
@@ -93,11 +96,26 @@ Successfully built 404cf2421bd4
 Successfully tagged azhelper:latest
 ```
 
-This command will build the image locally, which I can then run a container from.
+We can see that our image is now available:
 
 ```bash
-Docker run -it azhelper
-Bash:
+> docker image list
+REPOSITORY           TAG                 IMAGE ID            CREATED             SIZE
+azhelper             latest              eaf6edd080b1        2 weeks ago         376MB
+```
+
+Now we can create our container which will drop us into the container and at the Bash command line:
+
+```bash
+> docker run -it azhelper
+bash-4.3#
+bash-4.3# ls
+azure-cli  dev        home       linuxrc    mnt        root       sbin       srv        tmp        var
+bin        etc        lib        media      proc       run        sys        usr
+bash-4.3# exit
+exit
+
+>
 ```
 
 Now that we are running a container where we can execute the azure cli from.  
