@@ -267,25 +267,29 @@ mytestgroup-2
 bash-4.3#
 ```
 
-Things are looking good, push your changes up to github to save all the good work.
+Things are looking good, we push our changes up to github to save all the good work.
 
 ## Dockerhub
 
-So we have created this awesome little container to run the Azure CLI from anywhere, and even have room to grow some handy functions for common use. But all this docker building seems a lot like shipping a code and requiring the end user to build it \(I am looking at you linux…\), let's address this. Now I am going to use Dockerhub.io since this is a completely open source and public image \(we also get automatic builds\), but the same concepts could be applied to a private/on-prem setup.
-
-```bash
-docker push straubt1/azhelper:latest
-```
-
-will push our latest build up to Dockerhub.  
-Success! We are done! Or are we?
+So we have created this awesome little image to run the Azure CLI from anywhere, and even have room to grow some handy functions for common use. But all this docker building seems a lot like shipping code and requiring the end user to build it, we address this next. 
 
 Remember I told you I was a DevOps Engineer and how good would I be if I left this in a state that required manually building and pushing up any time there was a change?
 
-Login to Dockerhub and view your dashboard where you should see your first image push.  
+We are going to use [Dockerhub](https://hub.docker.com/) since this is a completely open source and public image (we also get automatic builds), but the same concepts could be applied to a private/on-prem setup.
+
+In Docker for Windows we can login to our Dockerhub account which will let us push our image that we built locally.
+
+```bash
+# Tag our local image
+docker tag azhelper straubt1/azhelper
+# Push our image up to Dockerhub
+docker push straubt1/azhelper:latest
+```
+
+Login to [Dockerhub](https://hub.docker.com/) and view your dashboard where you should see your first image push.  
 Now lets add an integration to the github repo to allow for automatic builds.
 
-Note: Dockerhub will only provide this free service if you github repo and docker image are both publicly available. If you were private/on-prem, similar output could be found by using your build server to handle this for you.
+**Note:** Dockerhub will only provide this free service if you github repo and docker image are both publicly available. If you were private/on-prem, similar output could be found by using your build server to handle this for you.
 
 Once the integration is done we can set up triggers to determine when to build a new image and what tags to apply. For this example I am going with the most basic, checkins on the master branch will result in a new build that is tagged `latest`.
 
@@ -294,14 +298,6 @@ If I go to the "Build Details" pages I can manually trigger a build, then see th
 These steps should look familiar to what you were seeing locally, but now it is all done in the cloud.
 
 > Using two cloud hosted services \(github.com and dockerhub.io\) to build a docker image that contains a CLI tool used for deploying/configuring cloud services
-
-## Customizing
-
-_might take this out_
-
-Remember earlier I mentioned that creating the BASH to load everything in the `scripts` directory could also have benefit.  
-Consider you have functions that you don't want in a public repository.  
-You could map that local folder into the scripts folder and they will be loaded at runtime.
 
 ## Conclusion
 
