@@ -127,12 +127,15 @@ Please run "az login" to access your accounts.
 ```
 
 Oops, we need to login, try a `az login`.
+
 ```
 bash-4.3# az login
 To sign in, use a web browser to open the page https://aka.ms/devicelogin and enter the code ZZZZZZZZZ to authenticate.
 ```
-Follow the instructions to authenticate against your azure credentials to get access.
+
+Follow the instructions to authenticate against your azure credentials to get access.  
 Try again to list your accounts:
+
 ```
 bash-4.3# az account list
 [
@@ -151,33 +154,47 @@ bash-4.3# az account list
 ]
 ```
 
-
-
+---
 **Question**: Are we going to have to login every time?  
 **Answer**: Yes! If we leave it this way.
 
+---
+
 To fix this problem, lets exit out of our running container and map a volume where our login access tokens can be stored and persisted outside the container.
 
-`docker run -it -v ${HOME}/.azure:/root/.azure straubt1/azhelper:latest`  
-What are we doing here is mapping a folder on my machine INTO the container that can be used by the CLI to store needed information. This will allow us to start/stop the container and not be required to login every time.
+Make sure we have a local folder to store the Azure CLI files:
+```
+mkdir ${HOME}/.azure
+```
 
-At this point you may ask, what have we really done here? Why don’t we just use the azure-cli image directly. To that I say, but there is more.  
-If you JUST wanted the CLI and that was it, just use the base image and you are good.
+Now run the container again but let's add the volume:
 
-However, what if you wanted to add things that USED the CLI to make some of your common tasks easier? That is exactly what we are wanting here and we will dive into in the next section
+```
+docker run -it -v ${HOME}/.azure:/root/.azure azhelper:latest
+```
+
+**NOTE:** If you are running this from a Windows machine you may need to update your syntax to `docker run -it -v /${HOME}/.azure:/root/.azure azhelper:latest`.
+
+
+What are we doing here is mapping a folder on host machine _into_ the container that can be used by the CLI to store needed information. This will allow us to start/stop the container and not require a login every time.
+
+At this point you may ask, what have we really done here? Why don’t we just use the azure-cli image directly. To that I say, but there is more!
+If you _just_ wanted the Azure CLI, you could simply use the base image above.
+
+However, what if you wanted to add workflows that _used_ the Azure CLI? That is exactly what we want here and what we will do next.
 
 ## Taking another step
 
 As someone who uses the Azure portal I will tell you it can be a source of relief for quick tasks, and a source of immense pain for repeated tasks. Things quickly fall apart at scale and if you are dealing with hundreds of resources and is exacerbated if they are across multiple subscriptions.
 
 As a DevOps engineer working in Azure, some of the common requests I get are:  
-    • Turn on/off/restart every VM in several resource groups  
-    • Check the current power state of several resources groups  
+    • Start/Stop/Deallocate/Restart every VM in several resource groups  
+    • Check the current power state of all VM's in several resources groups  
     • Given an IP address, what is the name of the VM
 
-Back in our git repo lets add a scripts folder and some common `az` CLI calls I find myself performing every day. BASH is the flavor we are using here and there are several more functions being added, I will only cover a few to get us through the overall process.
+Back in our git repo lets add a scripts folder and some common `az` CLI calls. Everything is written in Bash since that is the shell we are using here. We will only cover a few to get us through the overall process, but there is room for expansion.
 
-In the scripts folder I create a file `search.sh` that will contain functions that are related to searching for resources \(namely resource groups and VM's\). The calls here are basic but it should be obvious why having these available to you can save you a lot of time.
+In the scripts folder I create a file `search.sh` that will contain functions that are related to searching for resources (namely resource groups and VM's). The calls here are basic but it should be obvious why having these available to you can save you a lot of time.
 
 ```bash
 # search for Resource Group by name
@@ -193,9 +210,9 @@ function search-vms () {
 }
 ```
 
-Note: The query language used by the Azure CLI 2.0 is a standard called JMESPath \(insert link\) which is a far cry from the where we were with the original CLI that had no built in querying. Instead you were forced to output in JSON and pipe to something like jq \(insert link\). Of course you could still use this approach for 2.0, but I find the syntax much easier to follow for JMESPath than jq, it is also a standardize spec. Alright, end of rant, back to Dockerizing.
+**Note:** The query language used by the Azure CLI 2.0 is a standard called [JMESPath  ](http://jmespath.org/)which is a far cry from the where we were with the CLI 1.0 that had no built in querying. Instead you were forced to output in JSON and pipe to something like [jq](https://stedolan.github.io/jq/). Of course you could still use this approach for CLI 2.0, but I find the syntax much easier to follow for JMESPath, it is also a standardize spec.
 
-Now lets get these script into the container. I could just copy this single script, but knowing I am going to want to build on these scripts in the future, let's assume that we will have an entire folder of scripts.
+We need to get this script into the container. We could just copy this single script, but knowing I am going to want to build on these scripts in the future, let's assume that we will have an entire folder of scripts.
 
 ```Dockerfile
 COPY scripts/ scripts/
