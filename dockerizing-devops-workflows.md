@@ -155,6 +155,7 @@ bash-4.3# az account list
 ```
 
 ---
+
 **Question**: Are we going to have to login every time?  
 **Answer**: Yes! If we leave it this way.
 
@@ -163,6 +164,7 @@ bash-4.3# az account list
 To fix this problem, lets exit out of our running container and map a volume where our login access tokens can be stored and persisted outside the container.
 
 Make sure we have a local folder to store the Azure CLI files:
+
 ```bash
 mkdir ${HOME}/.azure
 ```
@@ -175,10 +177,9 @@ docker run -it -v ${HOME}/.azure:/root/.azure azhelper:latest
 
 **NOTE:** If you are running this from a Windows machine you may need to update your syntax to `docker run -it -v /${HOME}/.azure:/root/.azure azhelper:latest`.
 
-
 What are we doing here is mapping a folder on host machine _into_ the container that can be used by the CLI to store needed information. This will allow us to start/stop the container and not require a login every time.
 
-At this point you may ask, what have we really done here? Why don’t we just use the azure-cli image directly. To that I say, but there is more!
+At this point you may ask, what have we really done here? Why don’t we just use the azure-cli image directly. To that I say, but there is more!  
 If you _just_ wanted the Azure CLI, you could simply use the base image above.
 
 However, what if you wanted to add workflows that _used_ the Azure CLI? That is exactly what we want here and what we will do next.
@@ -194,7 +195,7 @@ As a DevOps engineer working in Azure, some of the common requests I get are:
 
 Back in our git repo lets add a scripts folder and some common `az` CLI calls. Everything is written in Bash since that is the shell we are using here. We will only cover a few to get us through the overall process, but there is room for expansion.
 
-In the scripts folder I create a file `search.sh` that will contain functions that are related to searching for resources (namely resource groups and VM's). The calls here are basic but it should be obvious why having these available to you can save you a lot of time.
+In the scripts folder I create a file `search.sh` that will contain functions that are related to searching for resources \(namely resource groups and VM's\). The calls here are basic but it should be obvious why having these available to you can save you a lot of time.
 
 ```bash
 # search for Resource Group by name
@@ -230,6 +231,7 @@ done;" > ~/.bashrc
 This may look a bit wild, but I assure you it is of the simplest intent. Any time that Bash loads, anything in the `scripts` folder will get sourced and the functions made available.
 
 Our full `Dockerfile`:
+
 ```Dockerfile
 FROM azuresdk/azure-cli-python:latest
 
@@ -271,11 +273,11 @@ Things are looking good, we push our changes up to github to save all the good w
 
 ## Dockerhub
 
-So we have created this awesome little image to run the Azure CLI from anywhere, and even have room to grow some handy functions for common use. But all this docker building seems a lot like shipping code and requiring the end user to build it, we address this next. 
+So we have created this awesome little image to run the Azure CLI from anywhere, and even have room to grow with handy functions for common use. But all this docker building seems a lot like shipping code and requiring the end user to build it, we address this next.
 
 Remember I told you I was a DevOps Engineer and how good would I be if I left this in a state that required manually building and pushing up any time there was a change?
 
-We are going to use [Dockerhub](https://hub.docker.com/) since this is a completely open source and public image (we also get automatic builds), but the same concepts could be applied to a private/on-prem setup.
+We are going to use [Dockerhub](https://hub.docker.com/) since this is a completely open source and public image \(we also get automatic builds\), but the same concepts could be applied to a private/on-prem setup.
 
 In Docker for Windows we can login to our Dockerhub account which will let us push our image that we built locally.
 
@@ -286,17 +288,23 @@ docker tag azhelper straubt1/azhelper
 docker push straubt1/azhelper:latest
 ```
 
-Login to [Dockerhub](https://hub.docker.com/) and view your dashboard where you should see your first image push.  
+Login to [Dockerhub](https://hub.docker.com/) and view the dashboard where we should see the image we pushed.  
+\(insert image\)
+
 Now lets add an integration to the github repo to allow for automatic builds.
 
-**Note:** Dockerhub will only provide this free service if you github repo and docker image are both publicly available. If you were private/on-prem, similar output could be found by using your build server to handle this for you.
+**Note:** Dockerhub will only provide this free service if the github repo and docker image are both publicly available. If this were private/on-prem, similar output could be found by using your build server to handle this for you.
 
-(insert process on how to add integration)
+\(insert process on how to add integration\)
 
-Once the integration is done we can set up triggers to determine when to build a new image and what tags to apply. For this example I am going with the most basic, checkins on the master branch will result in a new build that is tagged `latest`.
+Once the integration is done we can set up triggers to determine when to build a new image and what tags to apply. For this example I am going with the most basic, checkins on the master branch will result in a new build that is tagged `latest`. You could get as fancy as you need here but let's keep it simple.
 
-If I go to the "Build Details" pages I can manually trigger a build, then see the status as it builds.  
-(Show build details)  
+If I go to the "Build Details" pages I can manually trigger a build, then see the status as it builds.
+
+  
+\(Show build details\)  
+
+
 These steps should look familiar to what you were seeing locally, but now it is all done in the cloud.
 
 > Using two cloud hosted services \(github.com and dockerhub.io\) to build a docker image that contains a CLI tool used for deploying/configuring cloud services
@@ -304,8 +312,17 @@ These steps should look familiar to what you were seeing locally, but now it is 
 ## Conclusion
 
 We took a utility that we use locally, dockerized it, added some additional functionality and now everyone on your team can access it.  
-Running in this manner should eliminate the "it doesn’t work anymore" problems since everyone is essentially running the same container.  
+Running in this manner should eliminate the "it doesn’t work anymore" problems since everyone is running the same container. As changes to the image are made, all that is needed is a simple `docker pull <image>` from the public dockerhub.
+
+  
 Of course we have also have solved another problem. What if I have a need to access the Azure CLI from a build server? Well, now all you need is this image and the ability to map credentials into the container.
 
+\(reference back to the original problems we had hoped to solve\)
+
 This has been a simple yet powerful example of how to dockerize a utility.
+
+## Resources
+
+github repo - [/straubt1/azhelper](https://github.com/straubt1/azhelper)  
+dockerhub repo - [/straubt1/azhelper](https://hub.docker.com/r/straubt1/azhelper/)
 
