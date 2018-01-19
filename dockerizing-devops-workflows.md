@@ -288,8 +288,7 @@ docker tag azhelper straubt1/azhelper
 docker push straubt1/azhelper:latest
 ```
 
-Login to [Dockerhub](https://hub.docker.com/) and view the dashboard where we should see the image we pushed.  
-\(insert image\)
+Login to [Dockerhub](https://hub.docker.com/) and view the dashboard where we should see the image we pushed.
 
 Now lets add an integration to the github repo to allow for automatic builds.
 
@@ -311,7 +310,8 @@ These steps should look familiar to what you were seeing locally, but now it is 
 
 ## Conclusion
 
-We took a utility that we use locally, dockerized it, added some additional functionality and now everyone on your team can access it.  
+We took a utility that we use locally, dockerized it, added some additional functionality and now everyone on your team can access it.
+
 Running in this manner should eliminate the "it doesn’t work anymore" problems since everyone is running the same container. As changes to the image are made, all that is needed is a simple `docker pull <image>` from the public dockerhub.
 
   
@@ -323,6 +323,6 @@ This has been a simple yet powerful example of how to dockerize a utility.
 
 ## Resources
 
-github repo - [/straubt1/azhelper](https://github.com/straubt1/azhelper)  
+github repo - [/straubt1/azhelper](https://github.com/straubt1/azhelper/tree/csg-blog)  
 dockerhub repo - [/straubt1/azhelper](https://hub.docker.com/r/straubt1/azhelper/)
 
