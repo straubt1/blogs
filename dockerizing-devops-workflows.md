@@ -172,12 +172,12 @@ mkdir ${HOME}/.azure
 Now run the container again but let's add the volume:
 
 ```bash
-docker run -it -v ${HOME}/.azure:/root/.azure azhelper:latest
+docker run --rm -it -v ${HOME}/.azure:/root/.azure azhelper:latest
 ```
 
-**NOTE:** If you are running this from a Windows machine you may need to update your syntax to `docker run -it -v %HOME%/.azure:/root/.azure azhelper:latest`.
+**NOTE:** If you are running this from a Windows machine you may need to update your syntax to `docker run --rm -it -v %HOME%/.azure:/root/.azure azhelper:latest`.
 
-What are we doing here is mapping a folder on host machine _into_ the container that can be used by the CLI to store needed information. This will allow us to start/stop the container and not require a login every time.
+What are we doing here is mapping a folder on host machine _into_ the container that can be used by the CLI to store needed information. This will allow us to start/stop the container and not require a login every time. Notice the `-it` which is what creates the interactive session with the Docker container, and the `--rm` which will remove the container once you exit.
 
 At this point you may ask, what have we really done here? Why don’t we just use the azure-cli image directly. To that I say, but there is more!  
 If you _just_ wanted the Azure CLI, you could simply use the base image above.
@@ -251,7 +251,7 @@ Let's fire up another build and start a new container.
 
 ...
 
-> docker run -it -v ${HOME}/.azure:/root/.azure azhelper:latest
+> docker run --rm -it -v ${HOME}/.azure:/root/.azure azhelper:latest
 
 bash-4.3# search-group testgroup
 ResourceGroup
@@ -298,9 +298,8 @@ In the Dockerhub repository, click on "Build Settings" and connect the repositor
 
 Once the integration is done we can set up triggers to determine when to build a new image and what tags to apply. For this example I am going with the most basic, check-ins on the master branch will result in a new build that is tagged `latest`.
 
-If I go to the "Build Details" pages I can see all the builds and their status.
+If I go to the "Build Details" pages I can see all the builds and their status.  
 ![](/assets/Dockerhub-BuildDetails.png)
-
 
 These steps should look familiar to what you were seeing locally, but now it is all done in the cloud.
 
@@ -312,11 +311,9 @@ We took a utility that we use locally, dockerized it, added some additional func
 
 Running in this manner should eliminate the "it doesn’t work anymore" problems since everyone is running the same container. As changes to the image are made, all that is needed is a simple `docker pull <image>` from the public dockerhub.
 
-  
 Of course we have also have solved another problem. What if I have a need to access the Azure CLI from a build server? Well, now all you need is this image and the ability to map credentials into the container.
 
 This has been a simple yet powerful example of how to dockerize a utility.
-
 
 ## Resources
 
