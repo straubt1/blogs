@@ -67,7 +67,7 @@ Once this is set up we are ready to start adding files. It is always a good idea
 
 ## Dockerfile
 
-A Dockerfile represents how our docker image will be built. Now, there is a lot you can do in a `Dockerfile`, but everything we will do here is going to be very simple so don't stress the specifics.If you need to know more take a look at the docs [https://docs.docker.com/engine/reference/builder/](https://docs.docker.com/engine/reference/builder/).
+A Dockerfile represents how our docker image will be built and there is a lot you can do in a `Dockerfile`, but everything we will do here is going to be very simple so don't stress the specifics. If you need to know more take a look at the docs [https://docs.docker.com/engine/reference/builder/](https://docs.docker.com/engine/reference/builder/).
 
 We need to setup an environment that can run the Azure CLI. Normally this would involve digging into the requirements, python in this case, and adding all the things that the Azure CLI requires. Lucky for us the Azure CLI team has done this already, so we will just layer on top of what they have already done. You can take a deeper look at what they are doing in this image by checking out their [Dockerfile](https://github.com/Azure/azure-cli/blob/master/Dockerfile "Dockerfile").
 
@@ -175,7 +175,7 @@ Now run the container again but let's add the volume:
 docker run -it -v ${HOME}/.azure:/root/.azure azhelper:latest
 ```
 
-**NOTE:** If you are running this from a Windows machine you may need to update your syntax to `docker run -it -v /${HOME}/.azure:/root/.azure azhelper:latest`.
+**NOTE:** If you are running this from a Windows machine you may need to update your syntax to `docker run -it -v %HOME%/.azure:/root/.azure azhelper:latest`.
 
 What are we doing here is mapping a folder on host machine _into_ the container that can be used by the CLI to store needed information. This will allow us to start/stop the container and not require a login every time.
 
