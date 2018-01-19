@@ -1,6 +1,6 @@
 # Dockerize DevOps Workflows
 
-"It works on my machine" is often associated with application development when a developer makes a change that works locally but ends up breaking something in production. We have all been there, trying to run a command line utility and something isn't right, something has changed, and your peer respond with "I can run it from my machine".  Sound familiar?
+"It works on my machine" is often associated with application development when a developer makes a change that works locally but ends up breaking something in production. We have all been there, trying to run a command line utility and something isn't right, something has changed, and your peer responds with "I can run it from my machine".  Sound familiar?
 
 Each day I am using the Azure CLI, Terraform, and Ansible. The Azure CLI and Ansible both require Python, and it just so happens that they can use different versions as well. Of course Python versions can run side by side with each other and for a long time things just worked. Until they didn’t… So how can Docker help?
 
