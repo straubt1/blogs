@@ -1,8 +1,12 @@
 # Dockerize DevOps Workflows
 
+:cat: MOAR PICSHURZ :cat:
+
 "It works on my machine" is often associated with application development when a developer makes a change that works locally but ends up breaking something in production. We have all been there, trying to run a command line utility and something isn't right, something has changed, and your peer responds with "I can run it from my machine".  Sound familiar?
 
 While working on DevOps in Azure I am constantly using the Azure CLI, Terraform, and Ansible. The Azure CLI and Ansible both require Python, and it just so happens that they can use different versions as well. Of course Python versions can run side by side with each other and for a long time things just worked. Until they didn’t… So how can Docker help?
+
+:boom: I would make note of Python Virtual Envs if you're going to specifically call out Python version issues
 
 What if we build a docker image that can be used to setup an environment that is purpose built for the utility we are trying to run?
 
@@ -34,6 +38,8 @@ Let's get started.
 Visit [https://docs.docker.com/engine/installation/](https://docs.docker.com/engine/installation/) and follow the setup for your operating system.
 
 The folks at docker.com have made it very easy to install Docker so you shouldn’t have any problems here. For this I happen to be using Docker For Windows which allows me to build linux and windows images.
+
+:point_up: I noticed that in this sentence you're referencing your Windows host, but :point_down: down in the section where you're showing how to persist the azure login, you're using Linux host commands. You'll want to make it consistent.
 
 We can ensure docker is running by firing up our favorite terminal and running a `docker version` command.
 
@@ -95,6 +101,8 @@ Removing intermediate container f0009bc62755
 Successfully built 404cf2421bd4
 Successfully tagged azhelper:latest
 ```
+
+:boom: isn't there a first run experience, where it asks you whether you want to allow azcli to collect telemetry? Worth mentioning?
 
 We can see that our image is now available:
 
@@ -159,6 +167,8 @@ bash-4.3# az account list
 **Question**: Are we going to have to login every time?  
 **Answer**: Yes! If we leave it this way.
 
+:boom: I would change this to "No! Not unless we leave it this way" because people who skim the article could misinterpret.
+
 ---
 
 To fix this problem, lets exit out of our running container and map a volume where our login access tokens can be stored and persisted outside the container.
@@ -177,7 +187,7 @@ docker run --rm -it -v ${HOME}/.azure:/root/.azure azhelper:latest
 
 **NOTE:** If you are running this from a Windows machine you may need to update your syntax to `docker run --rm -it -v %HOME%/.azure:/root/.azure azhelper:latest`.
 
-What are we doing here is mapping a folder on host machine _into_ the container that can be used by the CLI to store needed information. This will allow us to start/stop the container and not require a login every time. Notice the `-it` which is what creates the interactive session with the Docker container, and the `--rm` which will remove the container once you exit.
+What are we doing here is mapping a :boom: ~~folder~~ volume on host machine _into_ the container that can be used by the CLI to store needed information. This will allow us to start/stop the container and not require a login every time. Notice the `-it` which is what creates the interactive session with the Docker container, and the `--rm` which will remove the container once you exit.
 
 At this point you may ask, what have we really done here? Why don’t we just use the azure-cli image directly. To that I say, but there is more!  
 If you _just_ wanted the Azure CLI, you could simply use the base image above.
@@ -212,6 +222,7 @@ function search-vms () {
 ```
 
 **Note:** The query language used by the Azure CLI 2.0 is a standard called [JMESPath  ](http://jmespath.org/)which is a far cry from the where we were with the CLI 1.0 that had no built in querying. Instead you were forced to output in JSON and pipe to something like [jq](https://stedolan.github.io/jq/). Of course you could still use this approach for CLI 2.0, but I find the syntax much easier to follow for JMESPath, it is also a standardize spec.
+:boom: Not sure you need to rag on CLI 1.0 or JMESPath... just stick with the positives of JMESPath
 
 We need to get this script into the container. We could just copy this single script, but knowing we are going to want to build on these scripts in the future, let's assume that we will have an entire folder of scripts.
 
@@ -229,6 +240,7 @@ done;" > ~/.bashrc
 ```
 
 This may look a bit wild, but I assure you it is of the simplest intent. Any time that Bash loads, anything in the `scripts` folder will get sourced and the functions made available.
+:boom: I would touch on what `source` is
 
 Our full `Dockerfile`:
 
@@ -268,6 +280,8 @@ mytestgroup-1
 mytestgroup-2
 bash-4.3#
 ```
+
+:point_up: you may want to break this up into 2 multiline unformatted blocks
 
 Things are looking good, we push our changes up to github to save all the good work.
 
