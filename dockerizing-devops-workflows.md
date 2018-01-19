@@ -177,7 +177,7 @@ docker run --rm -it -v ${HOME}/.azure:/root/.azure azhelper:latest
 
 **NOTE:** If you are running this from a Windows machine you may need to update your syntax to `docker run --rm -it -v %HOME%/.azure:/root/.azure azhelper:latest`.
 
-What are we doing here is mapping a folder on host machine _into_ the container that can be used by the CLI to store needed information. This will allow us to start/stop the container and not require a login every time. Notice the `-it` which is what creates the interactive session with the Docker container, and the `--rm` which will remove the container once you exit.
+What are we doing here is mapping a volume to the host machine _into_ the container that can be used by the CLI to store needed information. This will allow us to start/stop the container and not require a login every time. Notice the `-it` which is what creates the interactive session with the Docker container, and the `--rm` which will remove the container once you exit.
 
 At this point you may ask, what have we really done here? Why don’t we just use the azure-cli image directly. To that I say, but there is more!  
 If you _just_ wanted the Azure CLI, you could simply use the base image above.
@@ -258,7 +258,8 @@ ResourceGroup
 --------------------------
 mytestgroup-1
 mytestgroup-2
-bash-4.3#
+```
+```
 bash-4.3# search-group test
 ResourceGroup
 --------------------------
