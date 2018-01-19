@@ -2,16 +2,16 @@
 
 "It works on my machine" is often associated with application development when a developer makes a change that works locally but ends up breaking something in production. We have all been there, trying to run a command line utility and something isn't right, something has changed, and your peer responds with "I can run it from my machine".  Sound familiar?
 
-Each day I am using the Azure CLI, Terraform, and Ansible. The Azure CLI and Ansible both require Python, and it just so happens that they can use different versions as well. Of course Python versions can run side by side with each other and for a long time things just worked. Until they didn’t… So how can Docker help?
+While working on DevOps in Azure I am constantly using the Azure CLI, Terraform, and Ansible. The Azure CLI and Ansible both require Python, and it just so happens that they can use different versions as well. Of course Python versions can run side by side with each other and for a long time things just worked. Until they didn’t… So how can Docker help?
 
 What if we build a docker image that can be used to setup an environment that is purpose built for the utility we are trying to run?
 
 Hers is a breakdown the problems we are trying to solve:
 
-* Running workflows locally for doesn’t always work.
-* Working on a new process tool that may take some time to get setup and need to ensure the team can easily use that workflow.
-* Enable the workflow to run on a build server.
-* Changes can be made to the workflow.
+* Running workflows locally doesn’t always work.
+* Working with a new tool that may take some time to get setup and we need to ensure the team can easily use that workflow.
+* Enable a workflow to run on a build server.
+* Changes can be made to the workflow without breaking everything.
 
 Docker to the rescue.
 
@@ -19,13 +19,13 @@ Let's go through an example that is "for the sake of argument/blog post" and jus
 
 I am a member of a Cloud DevOps team that is responsible for creating, configuring and maintaining cloud infrastructure in Azure. A common and very powerful tool at my disposal is the Azure CLI 2.0. My goal is to create a docker image that my team and I can use.
 
-The high level steps that I will perform are as follows, keep in mind that these steps could be done regardless of what utility you wish to dockerize:
+The high level steps that I will perform are as follows, keep in mind that these steps could be done regardless of what utility you wish to "dockerize":
 
-1. Create a github repo that contains a `Dockerfile` to create an environment to work out of and any other files you may need.
+1. Create a github repo that contains a `Dockerfile`.
 2. Build and test the image locally to ensure things are working as expected.
-3. Create a DockerHub repo to house the docker image for all to see.
-4. Setup continuous image building to capture changes to your image.
-5. Share with your team.
+3. Create a DockerHub repo to store the docker image for all to see and use.
+4. Setup continuous image building to capture changes to the image.
+5. Share with the team.
 
 Let's get started.
 
