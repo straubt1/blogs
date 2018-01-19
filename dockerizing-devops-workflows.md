@@ -39,7 +39,7 @@ Visit [https://docs.docker.com/engine/installation/](https://docs.docker.com/eng
 
 The folks at docker.com have made it very easy to install Docker so you shouldn’t have any problems here. For this I happen to be using Docker For Windows which allows me to build linux and windows images.
 
-:point_up: I noticed that in this sentence you're referencing your Windows host, but :point_down: [down here](#toms-linux-stuff) you're using Linux host commands. You'll want to make it consistent.
+:point_up: I noticed that in this sentence you're referencing your Windows host, but :point_down: down in the section where you're showing how to persist the azure login, you're using Linux host commands. You'll want to make it consistent.
 
 We can ensure docker is running by firing up our favorite terminal and running a `docker version` command.
 
@@ -166,10 +166,11 @@ bash-4.3# az account list
 
 **Question**: Are we going to have to login every time?  
 **Answer**: Yes! If we leave it this way.
+
 :boom: I would change this to "No! Not unless we leave it this way" because people who skim the article could misinterpret.
 
 ---
-(#toms-linux-stuff)
+
 To fix this problem, lets exit out of our running container and map a volume where our login access tokens can be stored and persisted outside the container.
 
 Make sure we have a local folder to store the Azure CLI files:
