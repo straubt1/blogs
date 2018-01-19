@@ -294,14 +294,12 @@ Now lets add an integration to the github repo to allow for automatic builds.
 
 **Note:** Dockerhub will only provide this free service if the github repo and docker image are both publicly available. If this were private/on-prem, similar output could be found by using your build server to handle this for you.
 
-\(insert process on how to add integration\)
+In the Dockerhub repository, click on "Build Settings" and connect the repository to your github repository.
 
-Once the integration is done we can set up triggers to determine when to build a new image and what tags to apply. For this example I am going with the most basic, checkins on the master branch will result in a new build that is tagged `latest`. You could get as fancy as you need here but let's keep it simple.
+Once the integration is done we can set up triggers to determine when to build a new image and what tags to apply. For this example I am going with the most basic, check-ins on the master branch will result in a new build that is tagged `latest`.
 
-If I go to the "Build Details" pages I can manually trigger a build, then see the status as it builds.
-
-  
-\(Show build details\)  
+If I go to the "Build Details" pages I can see all the builds and their status.
+![](/assets/Dockerhub-BuildDetails.png)
 
 
 These steps should look familiar to what you were seeing locally, but now it is all done in the cloud.
@@ -317,9 +315,8 @@ Running in this manner should eliminate the "it doesn’t work anymore" problems
   
 Of course we have also have solved another problem. What if I have a need to access the Azure CLI from a build server? Well, now all you need is this image and the ability to map credentials into the container.
 
-\(reference back to the original problems we had hoped to solve\)
-
 This has been a simple yet powerful example of how to dockerize a utility.
+
 
 ## Resources
 
