@@ -186,7 +186,7 @@ However, what if you wanted to add workflows that _used_ the Azure CLI? That is 
 
 ## Taking another step
 
-As someone who uses the Azure portal I will tell you it can be a source of relief for quick tasks, and a source of immense pain for repeated tasks. Things quickly fall apart at scale and if you are dealing with hundreds of resources and is exacerbated if they are across multiple subscriptions.
+As anyone who uses the Azure portal  will tell you it can be a source of relief for quick tasks, and a source of immense pain for repeated tasks. Things quickly fall apart at scale and if you are dealing with hundreds of resources and is exacerbated if they are across multiple subscriptions.
 
 As a DevOps engineer working in Azure, some of the common requests I get are:  
     • Start/Stop/Deallocate/Restart every VM in several resource groups  
@@ -273,7 +273,7 @@ Things are looking good, we push our changes up to github to save all the good w
 
 ## Dockerhub
 
-So we have created this awesome little image to run the Azure CLI from anywhere, and even have room to grow with handy functions for common use. But all this docker building seems a lot like shipping code and requiring the end user to build it, we address this next.
+So we have created this awesome little image to run the Azure CLI from anywhere, and even have room to grow with handy functions for common use. But all this docker building seems a lot like shipping code and requiring the end user to build it, let's address this next.
 
 Remember I told you I was a DevOps Engineer and how good would I be if I left this in a state that required manually building and pushing up any time there was a change?
 
