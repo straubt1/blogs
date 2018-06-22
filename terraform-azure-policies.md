@@ -124,6 +124,7 @@ Plan: 1 to add, 0 to change, 0 to destroy.
 
 Running a `terraform apply` creates the Policy in the Azure Subscription.
 Navigating to the [Azure Portal](https://portal.azure.com) we can see the Custom Policy:
+
 ![](assets/Azure-CustomPolicy.png)
 
 ## Azure Policy Assignment
@@ -230,6 +231,7 @@ Plan: 1 to add, 0 to change, 0 to destroy.
 
 Running a `terraform apply` creates the Assignment in the Azure Subscription.
 Navigating to the [Azure Portal](https://portal.azure.com) we can see the Assignment:
+
 ![](assets/Azure-Assignment.png)
 
 Success!
@@ -334,6 +336,7 @@ Notice that the tag values are are correctly indexed and displayed.
 
 Running a `terraform apply` creates the Assignment in the Azure Subscription.
 Navigating to the [Azure Portal](https://portal.azure.com) we can see the Assignments:
+
 ![](assets/Azure-Assignment-Count.png)
 
 ## Conclusions
