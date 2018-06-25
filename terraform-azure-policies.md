@@ -1,17 +1,22 @@
-# Using Terraform to Manage Azure Policies
+# Beyond Infrastructure Part 1 - Using Terraform to Manage Azure Policies
 
-Terraform is a great product for managing Azure infrastructure, but did you know that you can do a lot more than just stand up Virtual Machines?
-Recently I was creating a set of [Azure Policies](https://azure.microsoft.com/en-us/services/azure-policy/) that I could port across several Azure Subscriptions. Let's see how Terraform can help with this.
+Terraform is a great product for managing Azure infrastructure, but did you know that you can do a lot more than just stand up IaaS and PaaS resources?
+Recently I was creating a set of [Azure Policies](https://azure.microsoft.com/en-us/services/azure-policy/) that I could port across several Azure Subscriptions. For simplicities sake we will look at a single policy definition around requiring certain tags for every resource in the subscription.
+Let's see how I used Terraform to accomplish this quickly.
 
 ## Traditional Approach
 
 If you wanted to maintain Azure Policies in the past, you could either use the Azure Portal or ARM Templates.
-The Azure Portal is a great tool, however there is too much manual intervention and chance for human error.
+
+The Azure Portal is a great tool, however there is too much manual intervention and chance for human error when creating and updating policies/assignments.
 ARM Templates can work as well, but don't give you the flexibility to see what the difference is between your configuration before pushing a change. Also, if you want to span multiple subscriptions you would have to create your own tooling around managing the changes across all the subscriptions.
+
+Can Terraform do this more easily?
 
 ## Azure Terraform Provider
 
 There are two resources of interest:
+
 - `azurerm_policy_definition` Creates the custom Policy Definition for our subscription.
 - `azurerm_policy_assignment` Creates an Policy Assignment of the Policy Definition.
 
@@ -338,6 +343,16 @@ Running a `terraform apply` creates the Assignment in the Azure Subscription.
 Navigating to the [Azure Portal](https://portal.azure.com) we can see the Assignments:
 
 ![](assets/Azure-Assignment-Count.png)
+
+## Viewing Results
+
+Once the Audit Policy Assignments have had some time to be checked, any non-compliant resources will show up in the Portal.
+
+![](assets/Azure-Assignment-Compliance.png)
+
+As you can see here I have several resources that do not have the "Owner" tag and I can work towards making them compliant.
+
+Once I have a good handle on these required tags I can update the Terraform from `"effect": "audit"` to `"effect": "deny"`, this will deny any new request to create or modify any resource that doesn't have the "Owner" tag.
 
 ## Conclusions
 
