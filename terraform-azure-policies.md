@@ -30,13 +30,13 @@ Let's take a look at what this definition would look like in Terraform.
 
 We need to set the following parameters:
 
-- "name": The name of the policy, used to build the id.
-- "display_name": The display name used in the Azure Portal.
-- "description": Technically optional, but a great way to add clarity to what the purpose of the policy.
-- "policy_type": Type of policy, should be set to Custom.
-- "mode": The resources this policy will affect, should be set to All.
-- "policy_rule": The JSON representing the Rule
-- "parameters": The JSON representing the Parameters
+- **name:** The name of the policy, used to build the id.
+- **display_name:** The display name used in the Azure Portal.
+- **description:** Technically optional, but a great way to add clarity to what the purpose of the policy.
+- **policy_type:** Type of policy, should be set to Custom.
+- **mode:** The resources this policy will affect, should be set to All.
+- **policy_rule:** The JSON representing the Rule
+- **parameters:** The JSON representing the Parameters
 
 To get started with the obvious fields we have:
 
@@ -52,7 +52,7 @@ resource "azurerm_policy_definition" "requiredTag" {
 }
 ```
 
-The policy rule and parameters is in the form of JSON. This is not due to a design decision on the part the Terraform Provider, it is just how Azure has to interpret the policy. This can be a little convoluted so let's use the Terraform template_file provider to keep things as clean as possible.
+The `policy_rule` and `parameters` must be in the form of JSON. This is not due to a design decision on the part the Terraform Provider, it is just how Azure has to interpret the policy. This can be a little convoluted so let's use the Terraform template_file provider to keep things as clean as possible.
 
 ### Rule JSON
 
@@ -140,12 +140,12 @@ Now that we have defined a Custom Azure Policy, we need to assign it to our subs
 
 We need to set the following parameters:
 
-- "name": The name of the assignment, used to build the id.
-- "display_name": The display name used in the Azure Portal.
-- "description": Technically optional, but a great way to add clarity to what the purpose of the assignment.
-- "policy_definition_id": The id of the policy definition we created above
-- "scope": The scope of this assignment, here we are scoping this to the entire subscription.
-- "parameters": The JSON representing the required tag to assign to the definition
+- **name:** The name of the assignment, used to build the id.
+- **display_name:** The display name used in the Azure Portal.
+- **description:** Technically optional, but a great way to add clarity to what the purpose of the assignment.
+- **policy_definition_id:** The id of the policy definition we created above
+- **scope:** The scope of this assignment, here we are scoping this to the entire subscription.
+- **parameters:** The JSON representing the required tag to assign to the definition
 
 To get started with the obvious fields we have:
 
