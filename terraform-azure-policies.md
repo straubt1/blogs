@@ -1,12 +1,12 @@
 # Beyond Infrastructure Part 1 - Using Terraform to Manage Azure Policies
 
 Terraform is a great product for managing Azure infrastructure, but did you know that you can do a lot more than just stand up IaaS and PaaS resources?
-Recently I was creating a set of [Azure Policies](https://azure.microsoft.com/en-us/services/azure-policy/) that I could port across several Azure Subscriptions. For simplicities sake we will look at a single policy definition around requiring certain tags for every resource in the subscription.
+Recently I was creating a set of [Azure Policies](https://azure.microsoft.com/en-us/services/azure-policy/) that I could port across several Azure Subscriptions. For simplicities sake, we will look at a single policy definition around requiring certain tags for every resource in the subscription.
 Let's see how I used Terraform to accomplish this quickly.
 
 ## Traditional Approach
 
-If you wanted to maintain Azure Policies in the past, you could either use the Azure Portal or ARM Templates.
+In the past, if you wanted to maintain Azure Policies, you could either use the Azure Portal or ARM Templates.
 
 The Azure Portal is a great tool, however there is too much manual intervention and chance for human error when creating and updating policies/assignments.
 ARM Templates can work as well, but don't give you the flexibility to see what the difference is between your configuration before pushing a change. Also, if you want to span multiple subscriptions you would have to create your own tooling around managing the changes across all the subscriptions.
@@ -18,11 +18,11 @@ Can Terraform do this more easily?
 There are two resources of interest:
 
 - `azurerm_policy_definition` Creates the custom Policy Definition for our subscription.
-- `azurerm_policy_assignment` Creates an Policy Assignment of the Policy Definition.
+- `azurerm_policy_assignment` Creates a Policy Assignment of the Policy Definition.
 
 ### Azure Policy - Audit Required Tags
 
-Azure Tags are key to keeping track of the infrastructure in your subscription. Unless you have thoroughly planned out your tagging strategy you may find yourself in a situation where you want to start requiring a tag on all resources. Your first question should be how compliant is my current infrastructure for this newly required tag? We can easily do this with an Azure Policy using the `audit` effect.
+Azure Tags are key to keeping track of the infrastructure in your subscription. Unless you have thoroughly planned out your tagging strategy you may find yourself in a situation where you want to start requiring a tag on all resources. Your first question should be: "How compliant is my current infrastructure for this newly required tag?" We can easily do this with an Azure Policy using the `audit` effect.
 
 Let's take a look at what this definition would look like in Terraform.
 
@@ -32,9 +32,9 @@ We need to set the following parameters:
 
 - **name:** The name of the policy, used to build the id.
 - **display_name:** The display name used in the Azure Portal.
-- **description:** Technically optional, but a great way to add clarity to what the purpose of the policy.
-- **policy_type:** Type of policy, should be set to Custom.
-- **mode:** The resources this policy will affect, should be set to All.
+- **description:** Technically optional, but a great way to add clarity to the purpose of the policy.
+- **policy_type:** Type of policy, should be set to 'Custom'.
+- **mode:** The resources this policy will affect, should be set to 'All'.
 - **policy_rule:** The JSON representing the Rule
 - **parameters:** The JSON representing the Parameters
 
@@ -52,7 +52,7 @@ resource "azurerm_policy_definition" "requiredTag" {
 }
 ```
 
-The `policy_rule` and `parameters` must be in the form of JSON. This is not due to a design decision on the part the Terraform Provider, it is just how Azure has to interpret the policy. This can be a little convoluted so let's use the Terraform template_file provider to keep things as clean as possible.
+The `policy_rule` and `parameters` must be in the form of JSON. This is not due to a design decision on the part the Terraform Provider, it is just how Azure has to interpret the policy. This can be a little convoluted, so let's use the Terraform `template_file` provider to keep things as clean as possible.
 
 ### Rule JSON
 
@@ -142,7 +142,7 @@ We need to set the following parameters:
 
 - **name:** The name of the assignment, used to build the id.
 - **display_name:** The display name used in the Azure Portal.
-- **description:** Technically optional, but a great way to add clarity to what the purpose of the assignment.
+- **description:** Technically optional, but a great way to add clarity to the purpose of the assignment.
 - **policy_definition_id:** The id of the policy definition we created above
 - **scope:** The scope of this assignment, here we are scoping this to the entire subscription.
 - **parameters:** The JSON representing the required tag to assign to the definition
@@ -164,7 +164,7 @@ resource "azurerm_policy_assignment" "requiredTag" {
 
 ### policy_definition_id
 
-This id is simply pulled from the id output from the azurerm_policy_definition resource.
+This id is simply pulled from the id output from the `azurerm_policy_definition` resource.
 
 ```hcl
 resource "azurerm_policy_assignment" "requiredTag" {
@@ -176,7 +176,7 @@ resource "azurerm_policy_assignment" "requiredTag" {
 
 ### scope
 
-We want this policy assignment to be for the entire subscription. One option here would be to pass the subscription id as a variable, however we can source the id from the active terraform run by using the [azurerm_subscription](https://www.terraform.io/docs/providers/azurerm/d/subscription.html) data source.
+We want this policy assignment to be for the entire subscription. One option here would be to pass the subscription id as a variable, however we can source the id from the active `terraform run` by using the [azurerm_subscription](https://www.terraform.io/docs/providers/azurerm/d/subscription.html) data source.
 
 ```hcl
 data "azurerm_subscription" "current" {}
@@ -190,7 +190,7 @@ resource "azurerm_policy_assignment" "requiredTag" {
 
 ### parameters
 
-The last piece we need is the parameters JSON used to assign the requireTag value in the Azure Policy. Much like we did before we leverage the template_file provider.
+The last piece we need is the parameters JSON used to assign the 'requireTag' value in the Azure Policy. Much like we did before we leverage the `template_file` provider.
 
 ```hcl
 data "template_file" "requiredTag_policy_assign" {
@@ -259,7 +259,7 @@ variable "requiredTags" {
 }
 ```
 
-Now we can inject a count parameter in the assignment resource:
+Now we can inject a `count` parameter in the assignment resource:
 
 ```hcl
 resource "azurerm_policy_assignment" "requiredTag" {
@@ -272,7 +272,7 @@ resource "azurerm_policy_assignment" "requiredTag" {
 }
 ```
 
-> Note that we use the length of the requireTags variable to indicate how many times to repeat the assignment, then index into the list for the name.
+> Note that we use the length of the `requiredTags` variable to indicate how many times to repeat the assignment, then index into the list for the name.
 
 ### Parameters
 
@@ -356,7 +356,7 @@ Once I have a good handle on these required tags I can update the Terraform from
 
 ## Conclusions
 
-In this post we have shown how you can leverage Terraform to manage Azure Policies to create a consistent governance compliance across your Azure Subscription. One really great benefit to this solution is that it can be applied to many different Azure Subscriptions without much change in the configuration.
+In this post you have been shown how you can leverage Terraform to manage Azure Policies to create a consistent governance compliance across your Azure Subscription. One really great benefit to this solution is that it can be applied to many different Azure Subscriptions without much change in the configuration.
 
 > Stay tuned for the next blog in the "Beyond Infrastructure" series!
 
