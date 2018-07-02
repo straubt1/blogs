@@ -358,4 +358,11 @@ Once I have a good handle on these required tags I can update the Terraform from
 
 In this post we have shown how you can leverage Terraform to manage Azure Policies to create a consistent governance compliance across your Azure Subscription. One really great benefit to this solution is that it can be applied to many different Azure Subscriptions without much change in the configuration.
 
+> Stay tuned for the next blog in the "Beyond Infrastructure" series!
+
 All assets in this blog post can be found in the following [Gist](https://gist.github.com/straubt1/6f7b8056390a3843beb2e0197193af7f)
+
+
+## Next Steps
+
+To learn more about the benefits of Infrastructure as Code using Terraform, contact us at [info@cardinalsolutions.com](mailto:info@cardinalsolutions.com). From our 1-day hands-on workshop, to a 1-week guided pilot, we can help your organization implement or migrate to an Infrastructure as Code architecture for managing your cloud infrastructure.
