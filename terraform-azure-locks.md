@@ -166,7 +166,7 @@ Apply complete! Resources: 2 added, 0 changed, 0 destroyed.
 
 ### Existing Resources
 
-Some situations may not lend themselves to adding Locks to the same Terraform creating the resources. Your infrastructure may not have been created with Terraform and you haven't [imported]() your infrastructure yet. Another possibility is that the process to lock/unlock resources is managed by a different team or process. In this case you may just need to lock resources based on their Azure Resource Id.
+Some situations may not lend themselves to adding Locks to the same Terraform creating the resources. Your infrastructure may not have been created with Terraform and you haven't [imported](https://www.terraform.io/docs/import/usage.html) your infrastructure yet. Another possibility is that the process to lock/unlock resources is managed by a different team or process. In this case you may just need to lock resources based on their Azure Resource Id.
 
 Consider the example below where we create the Locks based only on a list of Ids.
 
