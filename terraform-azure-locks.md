@@ -2,7 +2,7 @@
 
 In part 1 of the Beyond Infrastructure series we looked at how Terraform can manage Azure Policies; in part 2 we will look at Azure Locks.
 
-When managing an Azure Subscription, there can be several people and processes in place that affect your resources. As an administrator you want to be sure that changes to critical resources are as protected as possible from any unintended changes. Luckily Azure has a mechanism to lock down resources preventing accidental deletion or modification of desired resources. Consider important resources such as networking, Express Routes, Databases, etc. that should never be altered without explicit intent. Azure Locks give you this functionality.
+When managing an Azure Subscription, there can be several teams and processes in place that have access to modify your resources. As an administrator you want to be sure that changes to critical resources are as protected as possible from any unintended changes. Luckily Azure has a mechanism to lock down resources preventing accidental deletion or modification of desired resources. Consider important resources such as Virtual Networks, Express Routes, Databases, etc. that should never be altered without explicit intent. Azure Locks give you this functionality.
 
 <!-- Azure Locks are useful to protect critical Azure resources from being altered accidentally. -->
 
@@ -39,7 +39,7 @@ If you wanted to maintain Azure Locks in the past, there were several options:
 
 The Azure Portal is a great tool, however there is too much manual intervention and chance for human error when creating and updating Locks.
 
-ARM Templates can work as well, but don't give you the flexibility to see what the difference is between your configuration before pushing a change.
+ARM Templates can work as well and are in the right direction, however they don't give you the flexibility to see what changes your configuration will have on the environment without pushing the changes to the environment.
 
 Using the Azure CLI/Powershell/REST API would require you to build your own tooling around a process to manage the Locks.
 
@@ -60,7 +60,7 @@ We need to set the following parameters:
 - **name:** The name of the Lock, this will be used when building the resource Id.
 - **scope:** The scope of the Lock, can be a Subscription, Resource Group, or Resource Id.
 - **lock_level:** The Lock level, can be `CanNotDelete` or `ReadOnly`.
-- **notes:** Notes about the Lock, can be useful to describe the business case for the specific Lock.
+- **notes:** (optional) Notes about the Lock, can be useful to describe the business case for the specific Lock.
 
 Now let's look at a few simple examples.
 
@@ -107,14 +107,14 @@ resource "azurerm_management_lock" "resource-group-level" {
 
 Let's look at two common scenarios for managing Locks in Azure:
 
-* At Resource creation within Terraform
-* Isolated process for resources that already exist.
+* Within existing Terraform configuration
+* New Terraform configuration
 
-### At Resource Creation
+### Existing Terraform Configuration
 
-If you are already using Terraform to manage your infrastructure, creating a Lock is as easy as adding the Lock resource. 
+If you are already using Terraform to manage your infrastructure, creating a Lock is as easy as adding the Lock resource to your existing Terraform configuration.
 
-Consider the example below where we are creating a Resource Group named `cardinal-rg`.
+Consider the example below where we are creating a Resource Group named `cardinal-rg` and adding a `ReadOnly` lock to it.
 
 ```hcl
 resource "azurerm_resource_group" "main" {
@@ -130,7 +130,7 @@ resource "azurerm_management_lock" "resource-group-level" {
 }
 ```
 
-Running an apply:
+Running the Terraform apply:
 
 ```sh
 Terraform will perform the following actions:
@@ -162,11 +162,13 @@ Do you want to perform these actions?
 Apply complete! Resources: 2 added, 0 changed, 0 destroyed.
 ```
 
+Navigating to the Azure Portal we can see the lock has been created.
+
 ![resource-group-lock-portal](assets/resource-group-lock-portal.png)
 
-### Existing Resources
+### New Terraform Configuration
 
-Some situations may not lend themselves to adding Locks to the same Terraform creating the resources. Your infrastructure may not have been created with Terraform and you haven't [imported](https://www.terraform.io/docs/import/usage.html) your infrastructure yet. Another possibility is that the process to lock/unlock resources is managed by a different team or process. In this case you may just need to lock resources based on their Azure Resource Id.
+In some situations you may have existing infrastructure that was not created by Terraform, or you may choose to manage your locks separately. In either of these cases you can still use Terraform to manage the locks by the Azure Resource Id.
 
 Consider the example below where we create the Locks based only on a list of Ids.
 
@@ -251,12 +253,11 @@ Apply complete! Resources: 4 added, 0 changed, 0 destroyed.
 
 ## Conclusions
 
-In this post we have shown how you can leverage Terraform to manage Azure Locks to protect critical resources from deletion/modification in your Azure Subscription. Leveraging the Terraform workflow results in a source code driven solution that can be change controlled and visible to your entire organization.
+In this post we have shown how you can leverage Terraform to manage Azure Locks to protect critical resources from deletion/modification in your Azure Subscription using exist or new Terraform configuration. Leveraging the Terraform workflow results in a source code driven solution that can be change controlled, versioned, and visible to your entire organization.
 
 > Stay tuned for the next blog in the "Beyond Infrastructure" series!
 
-All assets in this blog post can be found in the following [Gist](https://gist.github.com/straubt1/6f7b8056390a3843beb2e0197193af7f)
-
+All assets in this blog post can be found in the following [Gist](https://gist.github.com/straubt1/fb65310bb105d7d50aa6d6106a4fb401)
 
 ## Next Steps
 
