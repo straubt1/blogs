@@ -1,14 +1,19 @@
 # Hashicorp Releases Terraform 0.12 Alpha Release
 
-This week I was fortunate enough to join one of key technology partners Hashicorp at their annual conference HashiConf. There was plenty of great updates, product releases, and feature roadmaps. By far the most exciting for me was the Alpha release of Terraform 0.12 which introduces several new language features. There are too many changes to discuss here, but Hashicorp has done a great job of detailing them in a blog series https://www.hashicorp.com/blog/terraform-0-1-2-preview.
+This week I was fortunate enough to join one of key technology partners Hashicorp at their annual conference HashiConf. There was plenty of great updates, product releases, and feature roadmap. By far the most exciting for me was the Alpha release of Terraform 0.12 which introduces several new configuration language features. There are too many changes to discuss here, but Hashicorp has done a great job of detailing them in a blog series https://www.hashicorp.com/blog/terraform-0-1-2-preview.
 
 During the second day of the conference [Kristin Laemmert](https://github.com/mildwonkey), one of Hashcorp's Terraform Core Engineers, presented on some of they syntax upgrades. The one that stood out to me the most is actually a combination of "dynamic blocks" and "for expressions" mainly because it solves a very specific problem I have faced when creating Azure Virtual Machines with Managed Data Disks.
 
 ## The Ask
 
 Let us consider a request for Terraform configuration to stand up a Virtual Machine with several data disks.
-The obvious first questions you may ask are; How many data disks, what size do they need to be, what disk SKU should they be?
-When this information is explicitly known and never changes things turn out easy, however if they are not know or differ by application we run into issues.
+
+The first questions you may ask are:
+
+1. How many data disks?
+1. What size disks?
+
+When this information is explicitly known and never changes things turn out to be easy, however if they are not known or differ by application we run into issues of repeated code.
 
 ## Version ~>0.11
 
@@ -68,7 +73,9 @@ resource "azurerm_virtual_machine" "myvm" {
 }
 ```
 
-As you can see, the `storage_data_disk` blocks must be explicitly declared. We certainly could abstract the disk sizes into variables, what happens when the disks need to be different sizes? Also, if I need to add or remove data disks, I have to update my Terraform configuration rather than injecting a new variable.
+As you can see, the `storage_data_disk` blocks must be explicitly declared. We certainly could abstract the disk sizes into variables, but what happens when the disks need to be different sizes? Also, if I need to add or remove data disks, I have to update my Terraform configuration rather than injecting a new variable.
+What is worse, if this code lives in a module, I would be forced to replicate the VM resource several times to account for every possible configuration!
+
 Now let's see how Terraform 0.12 can help.
 
 ## Version =0.12.0-alpha1
@@ -96,7 +103,8 @@ variable "data_disks" {
 }
 ```
 
-Above we are declaring a variable `data_disks` that contains the information we need for three data disks.
+Above we are declaring a variable `data_disks` that contains the information we need for three data disks. For ease of this example I am simply defaulting the values, however you can imagine this could be overridden with variable assignments.
+
 Now let's look how we can use "dynamic blocks" and "for expressions" to generate the data disks we want.
 
 ```hcl
@@ -119,7 +127,7 @@ resource "azurerm_virtual_machine" "main" {
 }
 ```
 
-Let's break down this down. We can see that the `dynamic` key word is followed by the name of the resource property you wish to make dynamic.
+Looking at the `dynamic` key word, we see it is followed by the name of the resource property you wish to make dynamic.
 Next the `for_each` assignment, which in our example has been set to an array since we want to generate multiple "storage_data_disk" blocks.
 Then we have a `content` block that will be the template used to populate the dynamic block, the contents here will look similar to a non-dynamic block in terms of the properties set. Notice that we can use the variable `storage_data_disk` which is populated for each item in the array we set.
 
