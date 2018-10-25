@@ -1,4 +1,4 @@
-# Terraform 0.12 Alpha Release
+# Hashicorp Releases Terraform 0.12 Alpha Release
 
 This week I was fortunate enough to join one of key technology partners Hashicorp at their annual conference HashiConf. There was plenty of great updates, product releases, and feature roadmaps. By far the most exciting for me was the Alpha release of Terraform 0.12 which introduces several new language features. There are too many changes to discuss here, but Hashicorp has done a great job of detailing them in a blog series https://www.hashicorp.com/blog/terraform-0-1-2-preview.
 
